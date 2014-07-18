@@ -1,0 +1,19 @@
+1. openMP model
+
+	There is a shared queue among the threads, containing partially expanded branches. 
+	Different threads keep removing these from the queue, evaluating whether they could 
+	lead to optimal solutions or not, and if yes, expanding them into further subproblems and adding those into the queue.
+
+2. MPI model
+	
+	There is a master node which maintains information about all others (slaves) processors, 
+	and keeps a track of which are idle. Slaves work on subproblems; and when they need to spawn new slaves, 
+	they request the master to allocate idle processors. 
+	The master also periodically passes on the best solution found so far, to the slaves.
+
+3. Hybrid model
+
+	It combines the benefits of both the above strategies. At every slave node, various threads run in parallel
+	(on the multiple cores of that node). The node has a shared queue among the threads, and threads operate in parallel
+	using openMP. As in the case of the MPI model, the master keeps track of idle slaves, 
+	and lets other slaves spawn them as	and when required.
